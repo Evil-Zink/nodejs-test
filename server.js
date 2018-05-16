@@ -19,12 +19,24 @@ var server = http.createServer(function(request, response){
 
   /******** 从这里开始看，上面不要看 ************/
 
-  console.log('方方说：含查询字符串的路径\n' + pathWithQuery)
+  console.log('zink说：含查询字符串的路径\n' + pathWithQuery)
 
   if(path === '/'){
-    response.statusCode = 200
+    var string = fs.readFileSync('./index.html', 'utf8')
+    var amount = fs.readFileSync('./db', 'utf8')//100
+    string = string.replace('&&&amount&&&', amount)
     response.setHeader('Content-Type', 'text/html;charset=utf-8')
-    response.write('哈哈哈')
+    response.write(string)
+    response.end()
+  }else if(path === '/pay'){
+    var amount = fs.readFileSync('./db', 'utf8')//100
+    response.setHeader('Content-Type', 'application/javascript')
+    response.statusCode = 200
+    var newAmount = amount - 1
+    fs.writeFileSync('./db', newAmount)
+    response.write(` 
+      ${query.callback}.call(undefined,'success')
+    `)
     response.end()
   }else{
     response.statusCode = 404
