@@ -24,6 +24,7 @@ var server = http.createServer(function(request, response){
   if(path === '/'){
     var string = fs.readFileSync('./index.html', 'utf8')
     var amount = fs.readFileSync('./db', 'utf8')//100
+    response.statusCode = 200
     string = string.replace('&&&amount&&&', amount)
     response.setHeader('Content-Type', 'text/html;charset=utf-8')
     response.write(string)
@@ -38,7 +39,26 @@ var server = http.createServer(function(request, response){
       ${query.callback}.call(undefined,'success')
     `)
     response.end()
-  }else{
+  }else if(path === '/main.js'){
+    var string = fs.readFileSync('./main.js', 'utf8')
+    response.statusCode = 200
+    response.setHeader('Content-Type', 'text/javascript;charset=utf-8')
+    response.write(string)
+    response.end()
+  }else if(path === '/xxx'){
+    response.statusCode = 200
+    response.setHeader('Content-Type', 'text/json;charset=utf-8')
+    response.setHeader('Access-Control-Allow-Origin', 'http://zink.com:8001')
+    response.write(`{
+      "note":{
+        "to": "jack",
+        "from": "zink",
+        "heading": "打招呼",
+        "content": "hi"
+      }
+    }`)
+    response.end()
+  } else{
     response.statusCode = 404
     response.setHeader('Content-Type', 'text/html;charset=utf-8')
     response.write('呜呜呜')
