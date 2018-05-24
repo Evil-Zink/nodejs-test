@@ -1,54 +1,52 @@
-// window.jQuery = function(nodeOrSelector){
-//     let nodes = {}
-//     ndoes.addClass = function(){}
-//     nodes.html = function(){}
-//     return nodes
-// }
+window.jQuery = function(nodeOrSelector){
+    let nodes = {}
+    ndoes.addClass = function(){}
+    nodes.html = function(){}
+    return nodes
+}
 
-// window.jQuery.ajax = function({url, method, body, successFn, failFn, headers}){
+window.jQuery.ajax = function({url, method, body, headers}){
+    return new Promise(function(resolve, reject){
+        let request = new XMLHttpRequest()
+        request.open(method, url)  //初始化请求
+        for(let key in headers){
+            let value = headers[key]
+            request.setRequestHeader(key, value)
+        }
+        request.onreadystatechange = () =>{
+           if(request.readyState === 4){
+               if(request.status >= 200 && request.status <= 300){
+                  resolve.call(undefined, request.responseText)
+               }else if(request.status >= 400){
+                  reject.call(undefined, request)
+               }
+           }
+        }
+        request.send(body)  //发送请求
+    })
+}
 
-//     let request = new XMLHttpRequest()
-//     request.open(method, url)  //初始化请求
-//     for(let key in headers){
-//         let value = headers[key]
-//         request.setRequestHeader(key, value)
-//     }
-//     request.onreadystatechange = () =>{
-//        if(request.readyState === 4){
-//            if(request.status >= 200 && request.status <= 300){
-//                successFn.call(undefined, request.responseText)
-//            }else if(request.status >= 400){
-//               failFn.call(undefined, request)
-//            }
-//        }
-//     }
-//     request.send(body)  //发送请求
-// }
-
-// window.$ = window.jQuery
+window.$ = window.jQuery
 
 myButton.addEventListener('click', (e) =>{
-    $.ajax({
+    window.jQuery.ajax({
         url: '/xxx',
         method: 'post',
-     }).then(
-        (responseText)=>{
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'zink': '20'
+        }
+    }).then(
+        (responseText) => {
             console.log(responseText);
-            return 'success'
+            return responseText;
         },
-        (response)=>{
-            console.log(response);
-            return 'fail'
+        (request) => {
+            console.log('error'); return 'error'
         }
-     ).then(
-         (上一次的结果) => {
-             console.log(上一次的结果)
-         },
-         (上一次的结果) => {
-            console.log(上一次的结果)
-        }
-     )
+    )
 })
+
         
 
 
